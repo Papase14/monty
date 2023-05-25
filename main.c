@@ -3,7 +3,7 @@
 int main(int argc, char *argv[])
 {
 	UNUSED(argc);
-	stack_t *stack = NULL;
+	stack_t *stack;
 	char *opcode, *argument, line[1024];
 	unsigned int line_number = 1;
 	FILE *file;
