@@ -1,56 +1,130 @@
 #include "monty.h"
 
 /**
-  * push - push data to top of stack.
-  * @stack: double pointer to stack.
-  * @line_number: number of lines.
-  *
-  * Return: void.
-  */
-void push(stack_t **stack, unsigned int line_number)
+ * isnum - check if string is a number
+ * @str: string input
+ * Return: 0 if false 1 if true
+ */
+int isnum(char *str)
 {
-	stack_t *new_node = malloc(sizeof(stack_t));
+	if (str == NULL || *str == '\0')
+		return (0);
 
-	(void)line_number;
-	if (new_node != NULL)
+	if (*str == '-')
+		str++;
+
+	while (*str)
 	{
-		new_node->n = argument;
-		new_node->prev = NULL;
-		new_node->next = NULL;
+		if (!isdigit(*str))
+			return (0);
+		str++;
+	} return (1);
+}
 
-		if (*stack == NULL)
-			*stack = new_node;
-		else
-		{
-			new_node->next = *stack;
-			(*stack)->prev = new_node;
-			*stack = new_node;
-		}
+/**
+ * _stack - LIFO data type
+ * @stack: stack of the memory
+ * @new: new stack to add
+ */
+void _stack(stack_t **stack, stack_t *new)
+{
+	new->n = atoi(arg_holder.arg);
+
+	if (*stack == NULL)
+	{
+		new->prev = NULL;
+		new->next = NULL;
+		*stack = new;
 	}
 	else
 	{
-		free_dlist(*stack);
-		free(new_node);
-		err(4);
+		(*stack)->prev = new;
+		new->next = *stack;
+		new->prev = NULL;
+		*stack = new;
 	}
 }
 
 /**
-  * pall - prints all arguments inserted.
-  * @stack: double pointer to stack;
-  * @line_number: number of lines.
-  *
-  * Return: void
-  */
-void pall(stack_t **stack, unsigned int line_number)
+ * _queue - FIFO data type
+ * @stack: stack of the memory
+ * @new: new stack to add
+ */
+void _queue(stack_t **stack, stack_t *new)
 {
-	stack_t *temp;
-	(void)line_number;
+	stack_t *holder;
 
-	temp = *stack;
-	while (temp != NULL)
+	new->n = atoi(arg_holder.arg);
+	new->next = NULL;
+
+	if (*stack == NULL)
 	{
-		fprintf(stdout, "%d\n", temp->n);
-		temp = temp->next;
+		new->prev = NULL;
+		*stack = new;
+	}
+	else
+	{
+		holder = *stack;
+
+		while (holder->next != NULL)
+		{
+			holder = holder->next;
+		}
+
+		holder->next = new;
+		new->prev = holder;
+	}
+}
+/**
+ * push - push integers to memory
+ * @stack: stack of memory
+ * @line_num: line number
+ */
+void push(stack_t **stack, unsigned int line_num)
+{
+	stack_t *new;
+
+	if (stack == NULL)
+		exit(EXIT_FAILURE);
+
+	if (!(isnum(arg_holder.arg)))
+	{
+		printf("L%u: usage: push integer\n", line_num);
+		free_stack(stack);
+		exit(EXIT_FAILURE);
+	}
+
+	new = malloc(sizeof(stack_t));
+	if (new == NULL)
+	{
+		printf("Error: malloc failed\n");
+		free_stack(stack);
+		exit(EXIT_FAILURE);
+	}
+
+	if (arg_holder.SQ)
+		_stack(stack, new);
+	else
+		_queue(stack, new);
+}
+
+/**
+ * pall - print out all the stack
+ * @stack: the stack
+ * @line_num: line number
+ */
+void pall(stack_t **stack, unsigned int line_num)
+{
+	stack_t *current;
+	(void)line_num;
+
+	if (*stack == NULL)
+		return;
+
+	current = *stack;
+	while (current != NULL)
+	{
+		printf("%d\n", current->n);
+		current = current->next;
 	}
 }

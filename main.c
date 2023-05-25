@@ -1,52 +1,74 @@
 #include "monty.h"
 
 /**
-  * main - entry point.
-  * @argc: argument count.
-  * @argv: argument vector.
-  *
-  * Return: 0.
-  */
+ * main - Main program running byte ocde.
+ * @argc: Number of arguments.
+ * @argv: Argument in matrix.
+ * Return: Return exit success.
+ */
 int main(int argc, char **argv)
 {
-	FILE *file;
-	size_t size = 0;
-	stack_t *stack = NULL;
-	unsigned int line_number = 1;
-	char **tk = NULL, *line = NULL;
-	void (*op_func)(stack_t **stack, unsigned int line_number);
-
 	if (argc != 2)
-		err(1);
-	file = fopen(argv[1], "r");
-	if (file == NULL)
-		err(2, argv[1]);
-
-	while (getline(&line, &size, file) != -1)
 	{
-		if (!strcmp(line, "\n") || *line == '#')
-		{
-			line_number++;
-			continue;
-		}
-		tk = break_line(line), op_func = get_opcode(tk[0]);
-		if (op_func == NULL)
-			free_dlist(stack), err(3, line_number, tk[0], tk, line);
-		if (strcmp(tk[0], "push") == 0 && tk[1])
-		{
-			if (toInt(tk[1]) >= 0)
-				argument = toInt(tk[1]);
-			else
-			{
-				free(line), free(tk), fclose(file), free_dlist(stack);
-				err(5, line_number);
-			}
-		}
-		if (!strcmp(tk[0], "push") && !tk[1])
-			free(line), free(tk), fclose(file), free_dlist(stack), err(5, line_number);
-
-		op_func(&stack, line_number), line_number++, free(tk);
+		printf("USAGE: monty file\n");
+		exit(EXIT_FAILURE);
 	}
-	fclose(file), free(line), free_dlist(stack);	
-	return (0);
+	make_buffer(argv[1]);
+	return (EXIT_SUCCESS);
+}
+
+/**
+ * opcode - check for operation code
+ * @command: cammand input
+ * @line_num: line number
+ * @stack: stack of memory
+ */
+void opcode(char *command, unsigned int line_num, stack_t **stack)
+{
+	int i = 0;
+	instruction_t ops[] = {
+		{"push", push},
+		{"pall", pall},
+		{"pint", pint},
+		{"pop", pop},
+		{"swap", swap},
+		{"add", add},
+		{"nop", nop},
+		{"sub", sub},
+		{"div", _div},
+		{"mul", mul},
+		{"mod", mod},
+		{"pchar", pchar},
+		{"pstr", pstr},
+		{"rotl", rotl},
+		{"rotr", rotr},
+		{NULL, NULL}
+	};
+
+	if (command[0] == '#')
+	{
+		return;
+	}
+	if (strcmp(command, "stack") == 0)
+	{
+		arg_holder.SQ = 1;
+		return;
+	}
+	if (strcmp(command, "queue") == 0)
+	{
+		arg_holder.SQ = 0;
+		return;
+	}
+	while (ops[i].opcode != NULL)
+	{
+		if (strcmp(ops[i].opcode, command) == 0)
+		{
+			ops[i].f(stack, line_num);
+			return;
+		}
+		i++;
+	}
+	printf("L%d: unknown instruction %s\n", line_num, command);
+	free_stack(stack);
+	exit(EXIT_FAILURE);
 }
