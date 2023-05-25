@@ -3,7 +3,7 @@
 int main(int argc, char *argv[])
 {
 	UNUSED(argc);
-	stack_t *stack = NULL;
+	stack_t *stack
 	char *opcode;
 	char *argument;
 	char line[1024];
@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
+	stack = NULL;
 	while (fgets(line, sizeof(line), file))
 	{
 		opcode = strtok(line, " \t\n");
