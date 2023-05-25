@@ -4,9 +4,10 @@ int main(int argc, char *argv[])
 {
 	UNUSED(argc);
 	stack_t *stack = NULL;
-	char *opcode, line[1024];
+	char *opcode, *argument, line[1024];
 	unsigned int line_number = 1;
 	FILE *file;
+	int value;
 
 	if (argc != 2)
 	{
@@ -31,17 +32,24 @@ int main(int argc, char *argv[])
 			/* Example code for the "push" opcode*/
 			if (strcmp(opcode, "push") == 0)
 			{
-				char *argument = strtok(NULL, " \t\n");
-				
-				if (argument == NULL || !is_integer(argument))
+				argument = strtok(NULL, " \t\n");
+
+				if (argument == NULL)
 				{
 					fprintf(stderr, "L%d: usage: push integer\n", line_number);
 					fclose(file);
 					free(stack);
 					return EXIT_FAILURE;
 				}
-				int value = atoi(argument);
-				push(&stack, line_number);
+
+				if (!is_integer(argument))
+				{
+					fprintf(stderr, "L%d: usage: push integer\n", line_number);
+					fclose(file);
+					free(stack);
+					return EXIT_FAILURE;
+				}
+				push(&stack, value);
 			}
 			/* Example code for the "pall" opcode*/
 			else if (strcmp(opcode, "pall") == 0)
