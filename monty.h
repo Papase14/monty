@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 #define UNUSED(x) (void)(x)
 
@@ -45,5 +46,7 @@ typedef struct instruction_s
 /*Prototype1*/
 void push(stack_t **stack, unsigned int line_number);
 void pall(stack_t **stack);
+bool is_integer(const char *str, int *result);
+
 
 #endif

@@ -46,3 +46,22 @@ void pall(stack_t **stack)
 		current = current->next;
 	}
 }
+
+bool is_integer(const char *str, int *result)
+{
+	char *endptr;
+	int value = strtol(str, &endptr, 10);
+	if (str == NULL || *str == '\0') {
+		return false;
+	}
+
+	if (*endptr != '\0') {
+		return false;
+	}
+
+	if (result != NULL) {
+		*result = value;
+	}
+	return true;
+}
+

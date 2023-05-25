@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 					return EXIT_FAILURE;
 				}
 
-				if (!is_integer(argument))
+				if (!is_integer(argument, &value))
 				{
 					fprintf(stderr, "L%d: usage: push integer\n", line_number);
 					fclose(file);
@@ -58,7 +58,6 @@ int main(int argc, char *argv[])
 			}
 		} line_number++;
 	}
-	fclose(file);
 	free(stack);
-	return 0;
+	return EXIT_FAILURE;
 }
