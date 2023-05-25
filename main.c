@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
+	stack = NULL;
+
 	while (fgets(line, sizeof(line), file))
 	{
 		opcode = strtok(line, " \t\n");
