@@ -75,11 +75,11 @@ void opcode(char *command, unsigned int line_num, stack_t **stack)
 
 /**
  * free_stack - Frees the memory allocated for a stack.
- * @stack: Pointer to the top of the stack.
+ * @stack: Double pointer to the top of the stack.
  */
-void free_stack(stack_t *stack)
+void free_stack(stack_t **stack)
 {
-    stack_t *current = stack;
+    stack_t *current = *stack;
     stack_t *next;
 
     while (current != NULL)
@@ -88,4 +88,6 @@ void free_stack(stack_t *stack)
         free(current);
         current = next;
     }
+
+    *stack = NULL;
 }
