@@ -3,7 +3,7 @@
 int main(int argc, char *argv[])
 {
 	UNUSED(argc);
-	stack_t *stack;
+	stack = (stack_t *)malloc(sizeof(stack_t));
 	char *opcode, *argument, line[1024];
 	unsigned int line_number = 1;
 	FILE *file;
@@ -21,8 +21,6 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 		return EXIT_FAILURE;
 	}
-
-	stack = NULL;
 
 	while (fgets(line, sizeof(line), file))
 	{
