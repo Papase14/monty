@@ -3,7 +3,7 @@
 int main(int argc, char *argv[])
 {
 	UNUSED(argc);
-	stack_t *stack
+	stack_t *stack;
 	char *opcode;
 	char *argument;
 	char line[1024];
