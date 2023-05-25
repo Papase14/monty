@@ -3,7 +3,7 @@
 int main(int argc, char *argv[])
 {
 	UNUSED(argc);
-	stack_t *stack;
+	stack_t *stack = NULL;
 	char *opcode;
 	char *argument;
 	char line[1024];
@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
 	while (fgets(line, sizeof(line), file))
 	{
 		opcode = strtok(line, " \t\n");
-		stack = (stack_t *)malloc(sizeof(stack_t));
 
 		/* Check if the opcode is not NULL and not a comment line*/
 		if (opcode != NULL && opcode[0] != '#')
