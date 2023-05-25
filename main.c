@@ -3,8 +3,10 @@
 int main(int argc, char *argv[])
 {
 	UNUSED(argc);
-	stack = (stack_t *)malloc(sizeof(stack_t));
-	char *opcode, *argument, line[1024];
+	stack_t *stack = (stack_t *)malloc(sizeof(stack_t));
+	char *opcode;
+	char *argument;
+	char line[1024];
 	unsigned int line_number = 1;
 	FILE *file;
 	int value;
