@@ -1,66 +1,52 @@
 #include "monty.h"
 
-int main(int argc, char *argv[])
+/**
+  * main - entry point.
+  * @argc: argument count.
+  * @argv: argument vector.
+  *
+  * Return: 0.
+  */
+int main(int argc, char **argv)
 {
-	UNUSED(argc);
-	stack_t *stack;
-	char *opcode;
-	char *argument;
-	char line[1024];
-	unsigned int line_number = 1;
 	FILE *file;
-	int value;
+	size_t size = 0;
+	stack_t *stack = NULL;
+	unsigned int line_number = 1;
+	char **tk = NULL, *line = NULL;
+	void (*op_func)(stack_t **stack, unsigned int line_number);
 
 	if (argc != 2)
-	{
-		fprintf(stderr, "USAGE: monty file\n");
-		return EXIT_FAILURE;
-	}
-
+		err(1);
 	file = fopen(argv[1], "r");
 	if (file == NULL)
-	{
-		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-		return EXIT_FAILURE;
-	}
+		err(2, argv[1]);
 
-	stack = NULL;
-	while (fgets(line, sizeof(line), file))
+	while (getline(&line, &size, file) != -1)
 	{
-		opcode = strtok(line, " \t\n");
-
-		/* Check if the opcode is not NULL and not a comment line*/
-		if (opcode != NULL && opcode[0] != '#')
+		if (!strcmp(line, "\n") || *line == '#')
 		{
-			/* Example code for the "push" opcode*/
-			if (strcmp(opcode, "push") == 0)
+			line_number++;
+			continue;
+		}
+		tk = break_line(line), op_func = get_opcode(tk[0]);
+		if (op_func == NULL)
+			free_dlist(stack), err(3, line_number, tk[0], tk, line);
+		if (strcmp(tk[0], "push") == 0 && tk[1])
+		{
+			if (toInt(tk[1]) >= 0)
+				argument = toInt(tk[1]);
+			else
 			{
-				argument = strtok(NULL, " \t\n");
-
-				if (argument == NULL)
-				{
-					fprintf(stderr, "L%d: usage: push integer\n", line_number);
-					fclose(file);
-					free(stack);
-					return EXIT_FAILURE;
-				}
-
-				if (!is_integer(argument, &value))
-				{
-					fprintf(stderr, "L%d: usage: push integer\n", line_number);
-					fclose(file);
-					free(stack);
-					return EXIT_FAILURE;
-				}
-				push(&stack, value);
+				free(line), free(tk), fclose(file), free_dlist(stack);
+				err(5, line_number);
 			}
-			/* Example code for the "pall" opcode*/
-			else if (strcmp(opcode, "pall") == 0)
-			{
-				pall(&stack);
-			}
-		} line_number++;
+		}
+		if (!strcmp(tk[0], "push") && !tk[1])
+			free(line), free(tk), fclose(file), free_dlist(stack), err(5, line_number);
+
+		op_func(&stack, line_number), line_number++, free(tk);
 	}
-	free(stack);
-	return EXIT_FAILURE;
+	fclose(file), free(line), free_dlist(stack);	
+	return (0);
 }
