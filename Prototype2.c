@@ -37,7 +37,7 @@ void pop(stack_t **stack, unsigned int line_num)
 	if (*stack == NULL)
 		return;
 
-    (*stack)->prev = NULL;
+	(*stack)->prev = NULL;
 }
 
 /**
