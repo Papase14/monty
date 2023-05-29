@@ -45,7 +45,7 @@ void opcode(char *command, unsigned int line_num, stack_t **stack)
 		arg_holder.SQ = 0;
 		return;
 	}
-	while (ops[i].opcode != NULL)
+	while (ops[i].opcode != NULL) 
 	{
 		if (strcmp(ops[i].opcode, command) == 0)
 		{
